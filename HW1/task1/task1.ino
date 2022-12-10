@@ -4,7 +4,6 @@ int currentLED = 12;
 int nextLED = 2;
 
 void setup() {
-  Serial.begin(9600);
   startedOn = millis();
   for (int i = 2; i <= 12; i+=2) {
     pinMode(i, OUTPUT);

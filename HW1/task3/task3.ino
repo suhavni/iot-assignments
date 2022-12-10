@@ -9,6 +9,6 @@ void loop() {
     if (sensorValue && sensorValue < 200) {
         Serial.print("Coins: ");
         Serial.println(++coins);
-        delay(20);
+        delay(30);
     }
 }

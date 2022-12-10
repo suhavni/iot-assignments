@@ -14,21 +14,130 @@
 
 \date{10 Dec 2022}
 
+\input{arduinoLanguage.tex}
+
 \begin{document}
 
 \maketitle
 
-\section{Task 1: Disco Lights}
+\section*{Task 1: Disco Lights}
 
 \begin{enumerate}
-    \item YouTube Link: \href{https://youtu.be/KJ-E_A0_tmo}{https://youtu.be/KJ-E\_A0\_tmo}
-    \item Doodle \\\\
-        \includegraphics[scale=0.15]{task1_sketch.jpg}
-    \item Codes
-        \begin{itemize}
-            \item GitHub Link: 
-            \item Code Snippet:
-        \end{itemize}
+	\item YouTube Link: \href{https://youtu.be/KJ-E_A0_tmo}{https://youtu.be/KJ-E\_A0\_tmo}
+	\item Doodle \\\\
+		\includegraphics[scale=0.15]{task1/sketch.jpg}
+	\item Code
+		\begin{itemize}
+			\item GitHub Link:\\ 
+				\href{https://github.com/suhavni/iot-assignments/blob/main/HW1/task1/task1.ino}{https://github.com/suhavni/iot-assignments/blob/main/HW1/task1/task1.ino}
+			\item Code Snippet:
+				\begin{lstlisting}[language=Arduino]
+		unsigned long startedOn = 0;
+		long interval = 1;
+		int currentLED = 12;
+		int nextLED = 2;
+
+		void setup() {
+			startedOn = millis();
+			for (int i = 2; i <= 12; i+=2) {
+				pinMode(i, OUTPUT);
+			}
+		}
+
+		void loop() {
+			int sensorValue = analogRead(A0);
+			
+			unsigned long currentMillis = millis();
+
+			nextLED = (sensorValue < 512) ? -2 : 2;
+			sensorValue = (sensorValue < 512) ? sensorValue : 1023 - sensorValue;
+			interval = (sensorValue+15)*2;
+			
+			if(currentMillis - startedOn > interval) {
+				startedOn = currentMillis;
+				digitalWrite(currentLED+2, LOW);
+				currentLED = (currentLED + nextLED + 12)%12;
+				digitalWrite(currentLED+2, HIGH);
+			}
+		}
+				\end{lstlisting}
+	\end{itemize}
+\end{enumerate}
+
+\section*{Task 2: Ohmmeter}
+\subsection*{2.1 Ohm's Law Review}
+\includegraphics[scale=0.15]{task2/review1.jpg}
+
+\newpage
+\includegraphics[scale=0.15]{task2/review2.jpg}
+\newpage
+
+\subsection*{2.2 Building Ohmmeter}
+
+\begin{enumerate}
+	\item YouTube Link: \href{https://youtu.be/ia95OZDOZOQ}{https://youtu.be/ia95OZDOZOQ}
+	\item Code
+		\begin{itemize}
+			\item GitHub Link:\\ 
+				\href{https://github.com/suhavni/iot-assignments/blob/main/HW1/task2/task2.ino}{https://github.com/suhavni/iot-assignments/blob/main/HW1/task2/task2.ino}
+			\item Code Snippet:
+				\begin{lstlisting}[language=Arduino]
+		#define R1 1000
+		#define V_IN 5
+		
+		int sensorValue = 0;
+		float Vout = 0;
+		float R2 = 0;
+		float buffer = 0;
+		
+		void setup() {
+				Serial.begin(9600);
+		}
+		
+		void loop() {
+				sensorValue = analogRead(A0);
+				if (sensorValue) {
+						Vout = (sensorValue * V_IN)/1023.0;
+						R2 = R1 * ((V_IN/Vout) - 1);
+						Serial.print("Resistance: ");
+						Serial.print(R2);
+						Serial.println("Ohms");
+						delay(1000);
+				}
+		}
+				\end{lstlisting}
+	\end{itemize}
+\end{enumerate}
+
+\newpage
+\section*{Task 3: Coin Counter}
+\begin{enumerate}
+	\item YouTube Link: \href{https://youtu.be/smF-OGToIHc}{https://youtu.be/smF-OGToIHc}
+	\item Sketch \\\\
+		\includegraphics[scale=0.15]{task3/sketch.jpg}
+	\item Code
+		\begin{itemize}
+			\item GitHub Link:\\ 
+				\href{https://github.com/suhavni/iot-assignments/blob/main/HW1/task3/task3.ino}{https://github.com/suhavni/iot-assignments/blob/main/HW1/task3/task3.ino}
+			\newpage
+			\item Code Snippet:
+				\begin{lstlisting}[language=Arduino]
+		int coins = 0;
+
+		void setup() {
+			Serial.begin(9600);
+		}
+		
+		void loop() {
+			int sensorValue = analogRead(A0);
+			if (sensorValue && sensorValue < 200) {
+				Serial.print("Coins: ");
+				Serial.println(++coins);
+				delay(30);
+			}
+		}
+				\end{lstlisting}
+	\end{itemize}
 \end{enumerate}
 
 \end{document}
