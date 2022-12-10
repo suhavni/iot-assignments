@@ -1,0 +1,118 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+
+\usepackage{graphicx}
+
+\usepackage{hyperref}
+
+\usepackage[utf8]{inputenc}
+
+\title{IOT Assignment 2}
+
+\author{Pornkamol Luthra}
+
+\date{10 Dec 2022}
+
+\input{arduinoLanguage.tex}
+
+\begin{document}
+
+\maketitle
+
+\section*{Task 1: Digital Piano}
+
+\begin{enumerate}
+	\item YouTube Link: \href{https://youtu.be/pVOpgSJZ-LQ}{https://youtu.be/pVOpgSJZ-LQ}
+	\item Doodle \\\\
+		\includegraphics[scale=0.2]{task1/sketch.jpg}
+		\newpage
+	\item Code
+		\begin{itemize}
+			\item GitHub Link:\\ 
+				\href{https://github.com/suhavni/iot-assignments/blob/main/HW2/task1/task1.ino}{https://github.com/suhavni/iot-assignments/blob/main/HW2/task1/task1.ino}
+			\item Code Snippet:
+				\begin{lstlisting}[language=Arduino]
+		#include "pitches.h"
+
+		int buttons[] = { 2, 3, 4, 5 };
+		int buzzer = 8;
+		unsigned long lastPlayedNote = 0;
+		int notes[] = {
+			NOTE_C4, NOTE_D4, NOTE_E4, NOTE_G4
+		};
+		
+		void setup() {
+			lastPlayedNote = millis();
+			for (int i = 0; i <= 3; i++) {
+			pinMode(buttons[i], INPUT_PULLUP);
+			}
+		}
+		
+		void loop() {
+			for (int i = 0; i <= 3; i++) {
+			bool activated = false;
+			while(digitalRead(buttons[i]) == LOW) {
+				tone(buzzer, notes[i]);
+				activated = true;
+				lastPlayedNote = millis();
+			}
+			}
+			unsigned long currentMillis = millis();
+			if (abs(currentMillis - lastPlayedNote) >= 500) {
+			noTone(buzzer);
+			lastPlayedNote = currentMillis;
+			}
+		}					
+				\end{lstlisting}
+	\end{itemize}
+\end{enumerate}
+
+\section*{Task 2: Some Calculations}
+\includegraphics[scale=0.2]{task2/calculations.jpg}
+
+\section*{Task 3: (Covid Edition)}
+\begin{enumerate}
+	\item YouTube Link: \href{https://youtu.be/3CpX_AwkQpw}{https://youtu.be/3CpX\_AwkQpw}
+		\newpage
+	\item Sketch \\\\
+		\includegraphics[scale=0.2]{task3/sketch.jpg}
+	\item Code
+		\begin{itemize}
+			\item GitHub Link:\\ 
+				\href{https://github.com/suhavni/iot-assignments/blob/main/HW2/task3/task3.ino}{https://github.com/suhavni/iot-assignments/blob/main/HW2/task3/task3.ino}
+			\newpage
+			\item Code Snippet:
+				\begin{lstlisting}[language=Arduino]
+		#define BUZZER A2
+		#define HIGH 255
+		
+		int lastHuman = 0;
+		int previouslyHuman = false;
+		
+		void setup() {
+			Serial.begin(9600);
+			pinMode(BUZZER, OUTPUT);
+		}
+		
+		void loop() {
+			int sensorValue = analogRead(A0);
+			int currentMillis = millis();
+			Serial.println(sensorValue);
+			if (sensorValue && sensorValue < 30) {
+				analogWrite(BUZZER, (currentMillis - lastHuman < 2000) ? HIGH : LOW
+				);
+				previouslyHuman = true;
+			} else if (previouslyHuman) {
+				previouslyHuman = false;
+				lastHuman = currentMillis;
+			} else if (currentMillis - lastHuman > 2000) {
+				analogWrite(BUZZER, LOW);
+			} 
+		}
+		
+				\end{lstlisting}
+	\end{itemize}
+\end{enumerate}
+
+\end{document}

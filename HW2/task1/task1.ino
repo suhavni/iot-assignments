@@ -1,23 +1,5 @@
-/*
-  Melody
-
-  Plays a melody
-
-  circuit:
-  - 8 ohm speaker on digital pin 8
-
-  created 21 Jan 2010
-  modified 30 Aug 2011
-  by Tom Igoe
-
-  This example code is in the public domain.
-
-  https://www.arduino.cc/en/Tutorial/BuiltInExamples/toneMelody
-*/
-
 #include "pitches.h"
 
-// notes in the melody:
 int buttons[] = { 2, 3, 4, 5 };
 int buzzer = 8;
 unsigned long lastPlayedNote = 0;
@@ -26,7 +8,6 @@ int notes[] = {
 };
 
 void setup() {
-  // iterate over the notes of the melody:
   lastPlayedNote = millis();
   for (int i = 0; i <= 3; i++) {
     pinMode(buttons[i], INPUT_PULLUP);
